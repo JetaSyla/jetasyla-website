@@ -46,52 +46,14 @@
       background-color: #e8eaf8;
     }
 
-    /* ─── Animated Blob Background ────────────────────────────────── */
-    .bg {
+    /* ─── 3D Canvas Background ─────────────────────────────────────── */
+    #bg3d {
       position: fixed;
       inset: 0;
       z-index: 0;
-      overflow: hidden;
-    }
-
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.6;
-      animation: drift 18s ease-in-out infinite alternate;
-    }
-
-    .blob-1 {
-      width: 520px; height: 520px;
-      background: radial-gradient(circle, var(--lavender), var(--sky));
-      top: -120px; left: -100px;
-      animation-delay: 0s;
-    }
-    .blob-2 {
-      width: 440px; height: 440px;
-      background: radial-gradient(circle, var(--peach), var(--lemon));
-      bottom: -80px; right: -80px;
-      animation-delay: -6s;
-    }
-    .blob-3 {
-      width: 360px; height: 360px;
-      background: radial-gradient(circle, var(--mint), var(--sky));
-      top: 40%; left: 55%;
-      animation-delay: -12s;
-    }
-    .blob-4 {
-      width: 280px; height: 280px;
-      background: radial-gradient(circle, var(--lemon), var(--peach));
-      top: 20%; left: 10%;
-      animation-delay: -4s;
-    }
-
-    @keyframes drift {
-      0%   { transform: translate(0, 0) scale(1); }
-      33%  { transform: translate(30px, -20px) scale(1.05); }
-      66%  { transform: translate(-20px, 30px) scale(0.97); }
-      100% { transform: translate(15px, 10px) scale(1.03); }
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     /* ─── Card ─────────────────────────────────────────────────────── */
@@ -308,11 +270,6 @@
       background-color: #13111f;
     }
 
-    body.dark .blob-1 { background: radial-gradient(circle, #2a2060, #1a1540); opacity: 0.8; }
-    body.dark .blob-2 { background: radial-gradient(circle, #1e1535, #2a1a45); opacity: 0.8; }
-    body.dark .blob-3 { background: radial-gradient(circle, #0f1a30, #1a2040); opacity: 0.8; }
-    body.dark .blob-4 { background: radial-gradient(circle, #251535, #1a1030); opacity: 0.8; }
-
     body.dark .link-btn {
       background: rgba(40, 36, 65, 0.60);
       border-color: rgba(255, 255, 255, 0.08);
@@ -331,7 +288,7 @@
     body.dark .divider { background: linear-gradient(90deg, #3a3868, #1e3a30); }
 
     /* ─── Smooth global transition ──────────────────────────────────── */
-    body, .card, .link-btn, .btn-icon, .blob, .divider {
+    body, .card, .link-btn, .btn-icon, .divider {
       transition: background 0.4s ease, background-color 0.4s ease,
                   color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
@@ -528,13 +485,8 @@
     </svg>
   </button>
 
-  <!-- Pastel blob background -->
-  <div class="bg" aria-hidden="true">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-    <div class="blob blob-4"></div>
-  </div>
+  <!-- 3D animated background -->
+  <canvas id="bg3d" aria-hidden="true"></canvas>
 
   <!-- Main card -->
   <main class="card" role="main">
@@ -722,6 +674,164 @@
 
   </main>
 
+  <!-- Three.js for 3D background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+  (function () {
+    /* ── Palettes ───────────────────────────────────────────────────── */
+    const LIGHT = {
+      bg:      0xe8eaf8,
+      spheres: [0xb5ead7, 0xffdac1, 0xc7ceea, 0xaee6f5, 0xfffacd, 0xe2d0f5, 0xffd6e0, 0xb8f0e0],
+      light1:  0xffdac1,
+      light2:  0xc7ceea,
+      opacity: 0.60,
+    };
+    const DARK = {
+      bg:      0x13111f,
+      spheres: [0x2a2060, 0x3a1a55, 0x0f1a38, 0x1a2a50, 0x251535, 0x1e1040, 0x2e1a50, 0x1a3040],
+      light1:  0x4a3080,
+      light2:  0x1a304a,
+      opacity: 0.80,
+    };
+
+    /* ── Renderer & Scene ───────────────────────────────────────────── */
+    const canvas   = document.getElementById('bg3d');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 3000);
+    camera.position.set(0, 0, 700);
+
+    /* ── Lights ─────────────────────────────────────────────────────── */
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(ambientLight);
+
+    const pointLight1 = new THREE.PointLight(LIGHT.light1, 2.5, 1400);
+    pointLight1.position.set(300, 250, 300);
+    scene.add(pointLight1);
+
+    const pointLight2 = new THREE.PointLight(LIGHT.light2, 2.0, 1400);
+    pointLight2.position.set(-300, -200, 150);
+    scene.add(pointLight2);
+
+    const pointLight3 = new THREE.PointLight(0xffffff, 0.8, 1200);
+    pointLight3.position.set(0, 300, -200);
+    scene.add(pointLight3);
+
+    /* ── Spheres ────────────────────────────────────────────────────── */
+    const sphereData = [
+      { r: 180, x: -380, y:  220, z: -180 },
+      { r: 140, x:  350, y: -180, z: -100 },
+      { r: 120, x:  160, y:  300, z:  100 },
+      { r: 100, x: -200, y: -300, z:   80 },
+      { r:  90, x:  400, y:  180, z:  -60 },
+      { r:  80, x: -350, y: -100, z:  200 },
+      { r: 110, x:   60, y: -260, z: -200 },
+      { r:  70, x: -120, y:  120, z:  300 },
+    ];
+
+    const meshes = sphereData.map((d, i) => {
+      const geo = new THREE.SphereGeometry(d.r, 48, 48);
+      const mat = new THREE.MeshPhongMaterial({
+        color:       new THREE.Color(LIGHT.spheres[i]),
+        shininess:   90,
+        specular:    new THREE.Color(0xffffff),
+        transparent: true,
+        opacity:     LIGHT.opacity,
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(d.x, d.y, d.z);
+      /* individual drift params */
+      mesh.userData = {
+        vx:    (Math.random() - 0.5) * 0.25,
+        vy:    (Math.random() - 0.5) * 0.18,
+        vz:    (Math.random() - 0.5) * 0.12,
+        rx:    (Math.random() - 0.5) * 0.002,
+        ry:    (Math.random() - 0.5) * 0.002,
+        phase: Math.random() * Math.PI * 2,
+        ox:    d.x, oy: d.y, oz: d.z,   /* origin for bounding */
+      };
+      scene.add(mesh);
+      return mesh;
+    });
+
+    /* ── Color interpolation helper ─────────────────────────────────── */
+    let colorT     = 0;      /* 0 = light, 1 = dark */
+    let colorTgt   = 0;
+    const tmpLight = new THREE.Color();
+    const tmpDark  = new THREE.Color();
+
+    function lerpColors(t) {
+      meshes.forEach((m, i) => {
+        tmpLight.setHex(LIGHT.spheres[i]);
+        tmpDark.setHex(DARK.spheres[i]);
+        m.material.color.lerpColors(tmpLight, tmpDark, t);
+        m.material.opacity = LIGHT.opacity + (DARK.opacity - LIGHT.opacity) * t;
+      });
+      const bgNow = new THREE.Color(LIGHT.bg).lerp(new THREE.Color(DARK.bg), t);
+      renderer.setClearColor(bgNow, 1);
+
+      tmpLight.setHex(LIGHT.light1); tmpDark.setHex(DARK.light1);
+      pointLight1.color.lerpColors(tmpLight, tmpDark, t);
+      tmpLight.setHex(LIGHT.light2); tmpDark.setHex(DARK.light2);
+      pointLight2.color.lerpColors(tmpLight, tmpDark, t);
+    }
+
+    /* Called by dark-mode toggle */
+    window.__bg3dSetDark = function (dark) { colorTgt = dark ? 1 : 0; };
+
+    /* ── Render loop ─────────────────────────────────────────────────── */
+    let t = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      t += 0.008;
+
+      /* Smooth color transition */
+      if (colorT !== colorTgt) {
+        colorT += (colorTgt - colorT) * 0.035;
+        if (Math.abs(colorT - colorTgt) < 0.001) colorT = colorTgt;
+        lerpColors(colorT);
+      }
+
+      const hw = window.innerWidth  * 0.75;
+      const hh = window.innerHeight * 0.75;
+
+      meshes.forEach((m) => {
+        const d = m.userData;
+        /* drift + sinusoidal float */
+        m.position.x += d.vx;
+        m.position.y += d.vy + Math.sin(t + d.phase) * 0.12;
+        m.position.z += d.vz;
+        m.rotation.x += d.rx;
+        m.rotation.y += d.ry;
+        /* soft bounce */
+        if (Math.abs(m.position.x) > hw + 200)  d.vx *= -1;
+        if (Math.abs(m.position.y) > hh + 200)  d.vy *= -1;
+        if (Math.abs(m.position.z) > 350)        d.vz *= -1;
+      });
+
+      /* Gentle camera sway for extra depth */
+      camera.position.x = Math.sin(t * 0.12) * 30;
+      camera.position.y = Math.cos(t * 0.09) * 20;
+      camera.lookAt(0, 0, 0);
+
+      renderer.render(scene, camera);
+    }
+
+    /* Init clear color and kick off */
+    lerpColors(0);
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  })();
+  </script>
+
   <script>
     (function () {
       const toggle = document.getElementById('themeToggle');
@@ -741,6 +851,7 @@
           body.classList.remove('dark');
         }
         toggle.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        if (window.__bg3dSetDark) window.__bg3dSetDark(mode === 'dark');
       }
 
       // Apply on load (before paint to avoid flash)
