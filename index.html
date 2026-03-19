@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jeta Syla</title>
+  <meta name="description" content="Jeta Syla — Executive Coordinator at Star Labs and Shkolla Digjitale" />
+
+  <!-- Google Fonts: Playfair Display (serif) + Inter (sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --mint:     #b5ead7;
+      --peach:    #ffdac1;
+      --lavender: #c7ceea;
+      --lemon:    #fffacd;
+      --sky:      #aee6f5;
+      --white:    #ffffff;
+      --text-dark:   #2d2d3a;
+      --text-mid:    #5a5a72;
+      --text-light:  #8888a2;
+      --glass-bg:    rgba(255, 255, 255, 0.55);
+      --glass-border:rgba(255, 255, 255, 0.75);
+      --shadow:   0 8px 40px rgba(100, 100, 160, 0.18);
+      --radius:   20px;
+      --btn-radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-dark);
+      overflow-x: hidden;
+      padding: 40px 16px;
+      background-color: #e8eaf8;
+    }
+
+    /* ─── Animated Blob Background ────────────────────────────────── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.6;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    .blob-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, var(--lavender), var(--sky));
+      top: -120px; left: -100px;
+      animation-delay: 0s;
+    }
+    .blob-2 {
+      width: 440px; height: 440px;
+      background: radial-gradient(circle, var(--peach), var(--lemon));
+      bottom: -80px; right: -80px;
+      animation-delay: -6s;
+    }
+    .blob-3 {
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, var(--mint), var(--sky));
+      top: 40%; left: 55%;
+      animation-delay: -12s;
+    }
+    .blob-4 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, var(--lemon), var(--peach));
+      top: 20%; left: 10%;
+      animation-delay: -4s;
+    }
+
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(30px, -20px) scale(1.05); }
+      66%  { transform: translate(-20px, 30px) scale(0.97); }
+      100% { transform: translate(15px, 10px) scale(1.03); }
+    }
+
+    /* ─── Card ─────────────────────────────────────────────────────── */
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 48px 40px 40px;
+      text-align: center;
+
+      /* Fade-in on load */
+      opacity: 0;
+      transform: translateY(28px);
+      animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Avatar ────────────────────────────────────────────────────── */
+    .avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--glass-border);
+      box-shadow: 0 4px 20px rgba(160, 140, 200, 0.25);
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--lavender), var(--mint));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /*
+      ╔══════════════════════════════════════════════════════════╗
+      ║  PROFILE PHOTO — HOW TO SWAP IN A REAL IMAGE            ║
+      ║                                                          ║
+      ║  1. Add your photo file next to index.html, e.g.:       ║
+      ║       photo.jpg                                          ║
+      ║                                                          ║
+      ║  2. Replace the <span class="monogram">JS</span>        ║
+      ║     element inside .avatar with:                         ║
+      ║       <img src="photo.jpg" alt="Jeta Syla"              ║
+      ║            style="width:100%;height:100%;               ║
+      ║                   object-fit:cover;" />                  ║
+      ╚══════════════════════════════════════════════════════════╝
+    */
+    .monogram {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-mid);
+      letter-spacing: 1px;
+      user-select: none;
+    }
+
+    /* ─── Name & Title ──────────────────────────────────────────────── */
+    .name {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: 0.02em;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--text-mid);
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .title strong {
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--lavender), var(--mint));
+      border-radius: 2px;
+      margin: 20px auto 28px;
+    }
+
+    /* ─── Link Buttons ──────────────────────────────────────────────── */
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: var(--btn-radius);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.55);
+      text-decoration: none;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition:
+        transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.22s ease,
+        background 0.22s ease;
+      text-align: left;
+    }
+
+    .link-btn:hover {
+      transform: translateY(-3px) scale(1.015);
+      box-shadow: 0 10px 28px rgba(140, 120, 200, 0.2);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .link-btn:active {
+      transform: translateY(0) scale(0.99);
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.15rem;
+    }
+
+    /* Per-button accent colors */
+    .btn-linkedin .btn-icon  { background: linear-gradient(135deg, #c7ceea, #aee6f5); }
+    .btn-email    .btn-icon  { background: linear-gradient(135deg, var(--peach), var(--lemon)); }
+    .btn-starlabs .btn-icon  { background: linear-gradient(135deg, var(--mint), var(--sky)); }
+    .btn-shkolla  .btn-icon  { background: linear-gradient(135deg, var(--lemon), var(--peach)); }
+
+    .btn-text { display: flex; flex-direction: column; gap: 1px; flex: 1; }
+
+    .btn-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.3;
+    }
+
+    .btn-sub {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-light);
+      line-height: 1.3;
+    }
+
+    .btn-arrow {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      flex-shrink: 0;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .link-btn:hover .btn-arrow {
+      transform: translateX(3px);
+      color: var(--text-mid);
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    .footer {
+      margin-top: 32px;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light);
+    }
+
+    /* ─── Staggered button fade-in ──────────────────────────────────── */
+    .link-btn {
+      opacity: 0;
+      animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .link-btn:nth-child(1) { animation-delay: 0.55s; }
+    .link-btn:nth-child(2) { animation-delay: 0.70s; }
+    .link-btn:nth-child(3) { animation-delay: 0.85s; }
+    .link-btn:nth-child(4) { animation-delay: 1.00s; }
+
+    /* ─── Mobile ────────────────────────────────────────────────────── */
+    @media (max-width: 520px) {
+      .card { padding: 36px 24px 32px; }
+      .name { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pastel blob background -->
+  <div class="bg" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+
+  <!-- Main card -->
+  <main class="card" role="main">
+
+    <!-- Profile photo / monogram -->
+    <div class="avatar-wrap">
+      <div class="avatar">
+        <!-- PLACEHOLDER: monogram "JS" shown until a real photo is added.
+             See the comment block in the <style> section above for
+             exact instructions on how to swap in a real photo. -->
+        <span class="monogram">JS</span>
+      </div>
+    </div>
+
+    <!-- Name -->
+    <h1 class="name">Jeta Syla</h1>
+
+    <!-- Title / roles -->
+    <p class="title">
+      Executive Coordinator<br />
+      <strong>Star Labs</strong> &amp; <strong>Shkolla Digjitale</strong>
+    </p>
+
+    <div class="divider"></div>
+
+    <!-- Link buttons -->
+    <nav class="links" aria-label="Links">
+
+      <!-- ── LinkedIn ─────────────────────────────────────────────── -->
+      <a href="https://www.linkedin.com/in/jeta-syla-0a001a288/" target="_blank" rel="noopener noreferrer"
+         class="link-btn btn-linkedin"
+         aria-label="LinkedIn profile">
+        <span class="btn-icon">
+          <!-- LinkedIn icon (SVG) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#4a6fa5" aria-hidden="true">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </span>
+        <span class="btn-text">
+          <span class="btn-label">LinkedIn</span>
+          <span class="btn-sub">Connect with me</span>
+        </span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- ── Email ────────────────────────────────────────────────── -->
+      <a href="mailto:jeta.syla@starlabspro.com"
+         class="link-btn btn-email"
+         aria-label="Send email">
+        <span class="btn-icon">
+          <!-- Envelope icon (SVG) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b07050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="20" height="16" x="2" y="4" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </span>
+        <span class="btn-text">
+          <span class="btn-label">Email</span>
+          <span class="btn-sub">Get in touch</span>
+        </span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- ── Star Labs LLC ─────────────────────────────────────────── -->
+      <a href="https://starlabs.dev/" target="_blank" rel="noopener noreferrer"
+         class="link-btn btn-starlabs"
+         aria-label="Star Labs LLC website">
+        <span class="btn-icon">
+          <!-- Star icon (SVG) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3a8a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </span>
+        <span class="btn-text">
+          <span class="btn-label">Star Labs LLC</span>
+          <span class="btn-sub">Where I work</span>
+        </span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- ── Shkolla Digjitale ─────────────────────────────────────── -->
+      <a href="https://shkolladigjitale.com/" target="_blank" rel="noopener noreferrer"
+         class="link-btn btn-shkolla"
+         aria-label="Shkolla Digjitale website">
+        <span class="btn-icon">
+          <!-- Graduation cap icon (SVG) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b06030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </span>
+        <span class="btn-text">
+          <span class="btn-label">Shkolla Digjitale</span>
+          <span class="btn-sub">Digital school initiative</span>
+        </span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+
+    </nav>
+
+    <!-- Footer -->
+    <footer class="footer" aria-label="Domain">
+      jetasyla.online
+    </footer>
+
+  </main>
+
+</body>
+</html>
