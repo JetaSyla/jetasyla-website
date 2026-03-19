@@ -246,6 +246,7 @@
     .btn-email    .btn-icon  { background: linear-gradient(135deg, var(--peach), var(--lemon)); }
     .btn-starlabs .btn-icon  { background: linear-gradient(135deg, var(--mint), var(--sky)); }
     .btn-shkolla  .btn-icon  { background: linear-gradient(135deg, var(--lemon), var(--peach)); }
+    .btn-booking  .btn-icon  { background: linear-gradient(135deg, #d8d4f0, #c7ceea); }
 
     .btn-text { display: flex; flex-direction: column; gap: 1px; flex: 1; }
 
@@ -294,6 +295,7 @@
     .link-btn:nth-child(2) { animation-delay: 0.70s; }
     .link-btn:nth-child(3) { animation-delay: 0.85s; }
     .link-btn:nth-child(4) { animation-delay: 1.00s; }
+    .link-btn:nth-child(5) { animation-delay: 1.15s; }
 
     /* ─── Mobile ────────────────────────────────────────────────────── */
     @media (max-width: 520px) {
@@ -403,6 +405,41 @@
         <span class="btn-text">
           <span class="btn-label">Shkolla Digjitale</span>
           <span class="btn-sub">Digital school initiative</span>
+        </span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+
+
+      <!-- ── Schedule a Meeting ────────────────────────────────────── -->
+      <!--
+        HOW TO GET YOUR MICROSOFT BOOKINGS LINK:
+        1. Go to outlook.office.com
+        2. Open Calendar → click "Create a Bookings page" (left sidebar)
+        3. Set up your page (name, availability, service types)
+        4. Click "Share" or "Copy booking link" — paste that URL below
+      -->
+      <!-- PLACEHOLDER: Replace # with your Microsoft Bookings URL     -->
+      <!-- Example: https://outlook.office365.com/owa/calendar/...     -->
+      <a href="#" target="_blank" rel="noopener noreferrer"
+         class="link-btn btn-booking"
+         aria-label="Schedule a meeting">
+        <span class="btn-icon">
+          <!-- Calendar icon (SVG) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6a5acd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <line x1="8" y1="14" x2="8" y2="14"/>
+            <line x1="12" y1="14" x2="12" y2="14"/>
+            <line x1="16" y1="14" x2="16" y2="14"/>
+            <line x1="8" y1="18" x2="8" y2="18"/>
+            <line x1="12" y1="18" x2="12" y2="18"/>
+          </svg>
+        </span>
+        <span class="btn-text">
+          <span class="btn-label">Schedule a Meeting</span>
+          <span class="btn-sub">Book time with me</span>
         </span>
         <span class="btn-arrow" aria-hidden="true">→</span>
       </a>
