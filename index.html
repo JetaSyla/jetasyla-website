@@ -868,12 +868,28 @@
         fields.forEach(function (f) { if (!f.value.trim()) valid = false; });
         if (!valid) return;
 
-        // TODO: replace this block with your actual send logic (see comment above the form)
-        // e.g. fetch('/your-endpoint', { method: 'POST', body: new FormData(form) })
+        // Collect form data
+        const data = {
+          name:    form.querySelector('input[name="name"]').value.trim(),
+          email:   form.querySelector('input[name="email"]').value.trim(),
+          message: form.querySelector('textarea[name="message"]').value.trim(),
+        };
 
-        // Show success message and reset form
-        form.reset();
-        success.classList.add('visible');
+        // Send to n8n webhook → Resend → jeta.syla@starlabspro.com
+        fetch('https://n8n.jetasyla.online/webhook/contact-jetasyla', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        .then(function (r) { return r.ok ? r : Promise.reject(r); })
+        .then(function () {
+          form.reset();
+          success.classList.add('visible');
+        })
+        .catch(function () {
+          success.textContent = 'Something went wrong — please email me directly.';
+          success.classList.add('visible');
+        });
       });
     })();
   </script>
