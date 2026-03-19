@@ -375,6 +375,128 @@
     body.dark .theme-toggle .icon-sun  { opacity: 0; transform: rotate(-30deg) scale(0.7); }
     body.dark .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
 
+    /* ─── Contact Form ──────────────────────────────────────────────── */
+    .form-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(180, 160, 220, 0.35), transparent);
+      margin: 24px 0;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(180, 160, 220, 0.35);
+      background: rgba(255, 255, 255, 0.45);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      outline: none;
+      resize: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.4s ease;
+    }
+
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: var(--text-light); }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: rgba(180, 160, 220, 0.75);
+      box-shadow: 0 0 0 3px rgba(199, 206, 234, 0.30);
+      background: rgba(255, 255, 255, 0.70);
+    }
+
+    .contact-form textarea { height: 96px; }
+
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: var(--btn-radius);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.55);
+      color: var(--text-dark);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      transition:
+        transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.22s ease,
+        background 0.22s ease;
+    }
+    .btn-submit:hover {
+      transform: translateY(-3px) scale(1.015);
+      box-shadow: 0 10px 28px rgba(140, 120, 200, 0.2);
+      background: rgba(255, 255, 255, 0.8);
+    }
+    .btn-submit:active { transform: translateY(0) scale(0.99); }
+    .btn-submit .btn-icon { background: linear-gradient(135deg, var(--mint), var(--lavender)); }
+    .btn-submit .btn-label { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); }
+    .btn-submit .btn-arrow {
+      margin-left: auto;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+    .btn-submit:hover .btn-arrow { transform: translateX(3px); color: var(--text-mid); }
+
+    .form-success {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(181, 234, 215, 0.35);
+      border: 1px solid rgba(181, 234, 215, 0.6);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-mid);
+      animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .form-success.visible { display: flex; }
+
+    /* Dark mode — form */
+    body.dark .contact-form input,
+    body.dark .contact-form textarea {
+      background: rgba(30, 26, 55, 0.55);
+      border-color: rgba(255, 255, 255, 0.10);
+      color: var(--text-dark);
+    }
+    body.dark .contact-form input:focus,
+    body.dark .contact-form textarea:focus {
+      border-color: rgba(160, 144, 224, 0.45);
+      box-shadow: 0 0 0 3px rgba(100, 90, 180, 0.18);
+      background: rgba(40, 35, 70, 0.70);
+    }
+    body.dark .btn-submit {
+      background: rgba(40, 36, 65, 0.60);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    body.dark .btn-submit:hover {
+      background: rgba(55, 50, 85, 0.80);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    }
+    body.dark .btn-submit .btn-icon { background: linear-gradient(135deg, #1a3d35, #2e2860); }
+    body.dark .form-success {
+      background: rgba(20, 50, 40, 0.45);
+      border-color: rgba(80, 160, 120, 0.30);
+    }
+    body.dark .form-divider {
+      background: linear-gradient(90deg, transparent, rgba(100, 90, 160, 0.25), transparent);
+    }
+
     /* ─── Mobile ────────────────────────────────────────────────────── */
     @media (max-width: 520px) {
       .card { padding: 36px 24px 32px; }
@@ -544,6 +666,55 @@
 
     </nav>
 
+    <!-- Contact form -->
+    <div class="form-divider" aria-hidden="true"></div>
+
+    <!--
+      CONTACT FORM — HOW TO WIRE UP REAL EMAIL DELIVERY:
+      The form currently shows a success message on submit but does not
+      send any data. To make it actually send emails, choose one of:
+
+      Option A — Formspree (free tier, no backend needed):
+        1. Sign up at formspree.io
+        2. Create a new form → copy your endpoint URL
+        3. Set the <form> action attribute to that URL and add method="POST"
+        4. Replace the JS submit handler below with a fetch() POST call
+
+      Option B — EmailJS (client-side, no backend):
+        1. Sign up at emailjs.com → connect your email service
+        2. Add their SDK <script> tag and call emailjs.send() in the handler
+
+      Option C — Your own backend / n8n webhook:
+        POST the form data to your n8n instance (already running on your server)
+        and trigger an email send workflow from there.
+    -->
+    <form class="contact-form" id="contactForm" novalidate aria-label="Contact form">
+      <input  type="text"  name="name"    placeholder="Your name"    required autocomplete="name" />
+      <input  type="email" name="email"   placeholder="Your email"   required autocomplete="email" />
+      <textarea            name="message" placeholder="Your message" required></textarea>
+
+      <button type="submit" class="btn-submit">
+        <span class="btn-icon">
+          <!-- Paper plane icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="#3a7a6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </span>
+        <span class="btn-label">Send Message</span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </button>
+
+      <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Thanks! I'll get back to you soon.
+      </div>
+    </form>
+
     <!-- Footer -->
     <footer class="footer" aria-label="Domain">
       jetasyla.online
@@ -580,6 +751,29 @@
         const next   = isDark ? 'light' : 'dark';
         localStorage.setItem('theme', next);
         applyTheme(next);
+      });
+
+      // ── Contact form ──────────────────────────────────────────────
+      const form    = document.getElementById('contactForm');
+      const success = document.getElementById('formSuccess');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        // Hide any previous success message before re-showing
+        success.classList.remove('visible');
+
+        // Basic validation — all fields required
+        const fields = form.querySelectorAll('input, textarea');
+        let valid = true;
+        fields.forEach(function (f) { if (!f.value.trim()) valid = false; });
+        if (!valid) return;
+
+        // TODO: replace this block with your actual send logic (see comment above the form)
+        // e.g. fetch('/your-endpoint', { method: 'POST', body: new FormData(form) })
+
+        // Show success message and reset form
+        form.reset();
+        success.classList.add('visible');
       });
     })();
   </script>
