@@ -7,30 +7,43 @@
   <meta name="description" content="Jeta Syla — Executive Coordinator at Star Labs and Shkolla Digjitale" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>" />
 
-  <!-- Google Fonts: Playfair Display (serif) + Inter (sans-serif) -->
+  <!-- Open Graph -->
+  <meta property="og:title" content="Jeta Syla" />
+  <meta property="og:description" content="Executive Coordinator at Star Labs &amp; Shkolla Digjitale" />
+  <meta property="og:image" content="https://jetasyla.online/photo.jpg" />
+  <meta property="og:url" content="https://jetasyla.online" />
+  <meta property="og:type" content="profile" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Jeta Syla" />
+  <meta name="twitter:description" content="Executive Coordinator at Star Labs &amp; Shkolla Digjitale" />
+  <meta name="twitter:image" content="https://jetasyla.online/photo.jpg" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ─── Reset & Base ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --mint:     #b5ead7;
-      --peach:    #ffdac1;
-      --lavender: #c7ceea;
-      --lemon:    #fffacd;
-      --sky:      #aee6f5;
-      --white:    #ffffff;
-      --text-dark:   #2d2d3a;
+      --mint:        #b5ead7;
+      --peach:       #ffdac1;
+      --lavender:    #c7ceea;
+      --lemon:       #fffacd;
+      --sky:         #aee6f5;
+      --rose:        #ffb7c5;
+      --text-dark:   #1e1c2e;
       --text-mid:    #5a5a72;
-      --text-light:  #8888a2;
-      --glass-bg:    rgba(255, 255, 255, 0.55);
-      --glass-border:rgba(255, 255, 255, 0.75);
-      --shadow:   0 8px 40px rgba(100, 100, 160, 0.18);
-      --radius:   20px;
-      --btn-radius: 14px;
+      --text-light:  #9090aa;
+      --glass-bg:    rgba(255,255,255,0.52);
+      --glass-border:rgba(255,255,255,0.82);
+      --glass-inner: rgba(255,255,255,0.38);
+      --shadow-sm:   0 2px 16px rgba(100,100,160,0.10);
+      --shadow:      0 8px 40px rgba(100,100,160,0.16);
+      --shadow-lg:   0 20px 60px rgba(100,100,160,0.20);
+      --radius:      22px;
+      --radius-sm:   14px;
+      --accent:      linear-gradient(135deg, #c7ceea, #b5ead7);
     }
 
     html { scroll-behavior: smooth; }
@@ -38,1159 +51,716 @@
     body {
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
       font-family: 'Inter', sans-serif;
       color: var(--text-dark);
       overflow-x: hidden;
-      padding: 40px 16px;
-      background-color: #e8eaf8;
+      padding: 48px 16px 64px;
+      background-color: #e5e8f5;
     }
 
-    /* ─── 3D Canvas Background ─────────────────────────────────────── */
-    #bg3d {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
+    /* ── WebGL canvas ── */
+    #bg3d { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; }
+
+    /* ── Page wrapper ── */
+    .page {
+      position: relative;
+      z-index: 1;
       width: 100%;
-      height: 100%;
+      max-width: 820px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      opacity: 0;
+      animation: revealPage 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;
+    }
+    @keyframes revealPage { to { opacity:1; } }
+
+    /* ── Glass card base ── */
+    .glass {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+
+    /* ── HERO card ── */
+    .hero {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 32px;
+      align-items: center;
+      padding: 40px 44px;
+    }
+
+    .avatar-col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+    .avatar-ring {
+      position: relative;
+      width: 136px;
+      height: 136px;
+      flex-shrink: 0;
+    }
+    .avatar-ring::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lavender), var(--mint), var(--peach));
+      z-index: 0;
+      opacity: 0.7;
+    }
+    .avatar-ring img {
+      position: relative;
+      z-index: 1;
+      width: 136px;
+      height: 136px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,0.9);
       display: block;
     }
 
-    /* ─── Two-column layout ────────────────────────────────────────── */
-    .layout {
+    .social-icons {
       display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      width: 100%;
-      max-width: 920px;
-      position: relative;
-      z-index: 1;
+      gap: 8px;
+      align-items: center;
     }
-
-    /* ─── Card ─────────────────────────────────────────────────────── */
-    .card {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 480px;
-      flex-shrink: 0;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      padding: 48px 40px 40px;
-      text-align: center;
-
-      /* Fade-in on load */
-      opacity: 0;
-      transform: translateY(28px);
-      animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
-    }
-
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── Side Panel ────────────────────────────────────────────────── */
-    .side-panel {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      opacity: 0;
-      transform: translateY(28px);
-      animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.30s forwards;
-    }
-
-    .feed-panel {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      padding: 22px 20px;
-      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    /* ─── Avatar ────────────────────────────────────────────────────── */
-    .avatar-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-
-    .avatar {
-      width: 100px;
-      height: 100px;
+    .social-icon {
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      border: 3px solid var(--glass-border);
-      box-shadow: 0 4px 20px rgba(160, 140, 200, 0.25);
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--lavender), var(--mint));
+      border: 1px solid rgba(199,206,234,0.55);
+      background: rgba(255,255,255,0.55);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .monogram {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 700;
+      text-decoration: none;
       color: var(--text-mid);
-      letter-spacing: 1px;
-      user-select: none;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, box-shadow 0.2s ease;
     }
+    .social-icon:hover { transform: scale(1.18) translateY(-2px); background: rgba(255,255,255,0.85); box-shadow: 0 4px 14px rgba(140,120,200,0.18); }
 
-    /* ─── Name & Title ──────────────────────────────────────────────── */
-    .name {
+    .hero-text {}
+    .hero-eyebrow {
+      font-size: 0.70rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    .hero-name {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-size: 2.8rem;
       font-weight: 700;
-      color: var(--text-dark);
-      letter-spacing: 0.02em;
-      line-height: 1.15;
+      line-height: 1.1;
       margin-bottom: 10px;
+      background: linear-gradient(135deg, #2d2d3a 30%, #6a5a9a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-
-    .title {
-      font-size: 0.875rem;
-      font-weight: 400;
+    .hero-roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .role-pill {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(199,206,234,0.6);
+      background: rgba(255,255,255,0.55);
       color: var(--text-mid);
-      line-height: 1.6;
-      margin-bottom: 6px;
+    }
+    .role-pill.accent { background: linear-gradient(135deg, rgba(199,206,234,0.5), rgba(181,234,215,0.5)); border-color: rgba(199,206,234,0.8); color: var(--text-dark); font-weight: 600; }
+    .hero-bio {
+      font-size: 0.875rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+      max-width: 400px;
     }
 
-    .title strong {
+    /* ── Currently row ── */
+    .currently-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      overflow: hidden;
+    }
+    .current-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      border-right: 1px solid rgba(199,206,234,0.35);
+      transition: background 0.2s ease;
+    }
+    .current-item:last-child { border-right: none; }
+    .current-item:hover { background: rgba(255,255,255,0.28); }
+    .current-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1; }
+    .current-title {
+      font-size: 0.80rem;
       font-weight: 600;
       color: var(--text-dark);
+      line-height: 1.3;
+    }
+    .current-sub {
+      font-size: 0.70rem;
+      color: var(--text-light);
+      line-height: 1.4;
+      margin-top: 2px;
     }
 
-    .divider {
-      width: 48px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--lavender), var(--mint));
-      border-radius: 2px;
-      margin: 20px auto 28px;
-    }
+    /* ── Two-col grid ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-    /* ─── Link Buttons ──────────────────────────────────────────────── */
-    .links {
+    /* ── Company cards ── */
+    .company-card {
+      padding: 26px 28px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease;
+    }
+    .company-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: var(--shadow-lg); }
+    .company-badge {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 4px;
+    }
+    .company-badge.teal   { background: linear-gradient(135deg, var(--mint), var(--sky)); }
+    .company-badge.amber  { background: linear-gradient(135deg, var(--lemon), var(--peach)); }
+    .company-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; color: var(--text-dark); }
+    .company-role { font-size: 0.75rem; font-weight: 500; color: var(--text-mid); }
+    .company-desc { font-size: 0.80rem; line-height: 1.65; color: var(--text-mid); }
+    .company-link { font-size: 0.72rem; font-weight: 600; color: #6a5a9a; letter-spacing: 0.02em; margin-top: auto; }
+
+    /* ── Section card ── */
+    .section-card { padding: 32px 36px; }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(199,206,234,0.5), transparent);
     }
 
+    /* ── Tags ── */
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(199,206,234,0.55);
+      background: rgba(255,255,255,0.50);
+      color: var(--text-mid);
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      cursor: default;
+    }
+    .tag:hover { background: rgba(255,255,255,0.88); color: var(--text-dark); transform: translateY(-1px); }
+
+    /* ── Link buttons ── */
+    .links { display: flex; flex-direction: column; gap: 9px; }
     .link-btn {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 14px 18px;
-      border-radius: var(--btn-radius);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 0.55);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.48);
       text-decoration: none;
       color: var(--text-dark);
       cursor: pointer;
-      transition:
-        transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-        box-shadow 0.22s ease,
-        background 0.22s ease;
-      text-align: left;
+      font-family: 'Inter', sans-serif;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, background 0.22s ease;
+      opacity: 0;
+      animation: slideIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
     }
+    @keyframes slideIn { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+    .link-btn:nth-child(1){animation-delay:0.5s} .link-btn:nth-child(2){animation-delay:0.58s}
+    .link-btn:nth-child(3){animation-delay:0.66s} .link-btn:nth-child(4){animation-delay:0.74s}
+    .link-btn:nth-child(5){animation-delay:0.82s} .link-btn:nth-child(6){animation-delay:0.90s}
+    .link-btn:hover { transform: translateX(4px); box-shadow: 0 6px 24px rgba(140,120,200,0.18); background: rgba(255,255,255,0.80); }
+    .link-btn:active { transform: translateX(2px) scale(0.99); }
 
-    .link-btn:hover {
-      transform: translateY(-3px) scale(1.015);
-      box-shadow: 0 10px 28px rgba(140, 120, 200, 0.2);
-      background: rgba(255, 255, 255, 0.8);
+    .btn-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .btn-linkedin .btn-icon { background: linear-gradient(135deg,#c7ceea,#aee6f5); }
+    .btn-discord  .btn-icon { background: linear-gradient(135deg,#d4d8f8,#c7ceea); }
+    .btn-email    .btn-icon { background: linear-gradient(135deg,var(--peach),var(--lemon)); }
+    .btn-starlabs .btn-icon { background: linear-gradient(135deg,var(--mint),var(--sky)); }
+    .btn-shkolla  .btn-icon { background: linear-gradient(135deg,var(--lemon),var(--peach)); }
+    .btn-booking  .btn-icon { background: linear-gradient(135deg,#d8d4f0,#c7ceea); }
+    .btn-text { display:flex; flex-direction:column; gap:1px; flex:1; }
+    .btn-label { font-size:0.85rem; font-weight:600; color:var(--text-dark); line-height:1.3; }
+    .btn-sub   { font-size:0.72rem; color:var(--text-light); }
+    .btn-arrow { font-size:0.85rem; color:var(--text-light); flex-shrink:0; margin-left:auto; transition: transform 0.2s ease, color 0.2s ease; }
+    .link-btn:hover .btn-arrow { transform:translateX(3px); color:var(--text-mid); }
+
+    /* ── Posts grid ── */
+    .posts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .post-card {
+      display: flex;
+      flex-direction: column;
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(199,206,234,0.35);
+      background: rgba(255,255,255,0.42);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.20s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.20s ease, background 0.20s ease;
     }
+    .post-card:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 8px 24px rgba(140,120,200,0.14); background: rgba(255,255,255,0.72); }
+    .post-meta { display:flex; align-items:center; gap:9px; margin-bottom:10px; }
+    .post-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; border:1.5px solid var(--glass-border); flex-shrink:0; }
+    .post-author { font-size:0.75rem; font-weight:600; color:var(--text-dark); line-height:1.2; }
+    .post-date   { font-size:0.68rem; color:var(--text-light); }
+    .post-text   { font-size:0.78rem; line-height:1.6; color:var(--text-mid); flex:1; margin-bottom:10px;
+                   display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; }
+    .post-cta    { font-size:0.70rem; font-weight:600; color:#6a5a9a; letter-spacing:0.02em; }
 
-    .link-btn:active {
-      transform: translateY(0) scale(0.99);
+    /* ── Contact form ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .contact-form { display: flex; flex-direction: column; gap: 10px; }
+    .contact-form input,
+    .contact-form textarea {
+      width:100%; padding:12px 16px; border-radius:12px;
+      border:1px solid rgba(180,160,220,0.30);
+      background:rgba(255,255,255,0.48);
+      font-family:'Inter',sans-serif; font-size:0.85rem; color:var(--text-dark);
+      outline:none; resize:none;
+      transition:border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color:var(--text-light); }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color:rgba(160,140,220,0.65);
+      box-shadow:0 0 0 3px rgba(199,206,234,0.28);
+      background:rgba(255,255,255,0.75);
+    }
+    .contact-form textarea { height:100px; }
 
-    .btn-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+    .btn-submit {
+      display:flex; align-items:center; gap:12px;
+      padding:13px 20px; border-radius:var(--radius-sm);
+      border:none;
+      background: linear-gradient(135deg, rgba(199,206,234,0.6), rgba(181,234,215,0.6));
+      color:var(--text-dark); cursor:pointer; font-family:'Inter',sans-serif;
+      font-size:0.875rem; font-weight:600;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, opacity 0.2s ease;
+      width:100%;
+    }
+    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(140,120,200,0.22); opacity:0.92; }
+    .btn-submit:active { transform:translateY(0) scale(0.99); }
+    .btn-submit-icon { width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,0.55); display:flex; align-items:center; justify-content:center; }
+    .btn-submit span { flex:1; text-align:left; }
+    .btn-submit-arrow { font-size:1rem; color:var(--text-mid); }
+    .form-success {
+      display:none; align-items:center; justify-content:center; gap:8px;
+      padding:14px; border-radius:12px;
+      background:rgba(181,234,215,0.35); border:1px solid rgba(181,234,215,0.6);
+      font-size:0.85rem; font-weight:500; color:var(--text-mid);
+    }
+    .form-success.visible { display:flex; }
+
+    /* ── Footer ── */
+    .footer-bar {
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      font-size: 1.15rem;
-    }
-
-    /* Per-button accent colors */
-    .btn-linkedin .btn-icon  { background: linear-gradient(135deg, #c7ceea, #aee6f5); }
-    .btn-discord  .btn-icon  { background: linear-gradient(135deg, #d4d8f8, #c7ceea); }
-    .btn-email    .btn-icon  { background: linear-gradient(135deg, var(--peach), var(--lemon)); }
-    .btn-starlabs .btn-icon  { background: linear-gradient(135deg, var(--mint), var(--sky)); }
-    .btn-shkolla  .btn-icon  { background: linear-gradient(135deg, var(--lemon), var(--peach)); }
-    .btn-booking  .btn-icon  { background: linear-gradient(135deg, #d8d4f0, #c7ceea); }
-
-    .btn-text { display: flex; flex-direction: column; gap: 1px; flex: 1; }
-
-    .btn-label {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      line-height: 1.3;
-    }
-
-    .btn-sub {
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: var(--text-light);
-      line-height: 1.3;
-    }
-
-    .btn-arrow {
-      font-size: 0.85rem;
-      color: var(--text-light);
-      flex-shrink: 0;
-      transition: transform 0.2s ease, color 0.2s ease;
-    }
-
-    .link-btn:hover .btn-arrow {
-      transform: translateX(3px);
-      color: var(--text-mid);
-    }
-
-    /* ─── Footer ────────────────────────────────────────────────────── */
-    .footer {
-      margin-top: 32px;
-      font-size: 0.72rem;
-      font-weight: 400;
+      gap: 6px;
+      padding: 14px 24px;
+      font-size: 0.68rem;
+      font-weight: 500;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-light);
+      background: rgba(255,255,255,0.30);
+      border: 1px solid rgba(255,255,255,0.60);
+      border-radius: var(--radius-sm);
+      backdrop-filter: blur(20px);
     }
 
-    /* ─── Staggered button fade-in ──────────────────────────────────── */
-    .link-btn {
-      opacity: 0;
-      animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .link-btn:nth-child(1) { animation-delay: 0.55s; }
-    .link-btn:nth-child(2) { animation-delay: 0.70s; }
-    .link-btn:nth-child(3) { animation-delay: 0.85s; }
-    .link-btn:nth-child(4) { animation-delay: 1.00s; }
-    .link-btn:nth-child(5) { animation-delay: 1.15s; }
-    .link-btn:nth-child(6) { animation-delay: 1.30s; }
-
-
-    /* ─── Dark Mode Variables ───────────────────────────────────────── */
+    /* ── Dark mode ── */
     body.dark {
-      --glass-bg:    rgba(30, 28, 48, 0.65);
-      --glass-border:rgba(255, 255, 255, 0.10);
-      --shadow:      0 8px 40px rgba(0, 0, 0, 0.45);
-      --text-dark:   #e8e6f4;
+      --text-dark:   #ebe9f8;
       --text-mid:    #a8a4c8;
-      --text-light:  #6a6690;
-      background-color: #13111f;
+      --text-light:  #68649a;
+      --glass-bg:    rgba(24,22,42,0.70);
+      --glass-border:rgba(255,255,255,0.09);
+      --glass-inner: rgba(255,255,255,0.05);
+      --shadow:      0 8px 40px rgba(0,0,0,0.45);
+      --shadow-lg:   0 20px 60px rgba(0,0,0,0.55);
+      background-color: #11101e;
     }
-
-    body.dark .link-btn {
-      background: rgba(40, 36, 65, 0.60);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    body.dark .link-btn:hover {
-      background: rgba(55, 50, 85, 0.80);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-    }
-
-    body.dark .btn-linkedin .btn-icon { background: linear-gradient(135deg, #2e3568, #1e3055); }
-    body.dark .btn-discord  .btn-icon { background: linear-gradient(135deg, #252870, #1e2260); }
-    body.dark .btn-email    .btn-icon { background: linear-gradient(135deg, #4a2e22, #3a2a18); }
-    body.dark .btn-starlabs .btn-icon { background: linear-gradient(135deg, #1a3d35, #152d38); }
-    body.dark .btn-shkolla  .btn-icon { background: linear-gradient(135deg, #3a2e10, #3a2218); }
-    body.dark .btn-booking  .btn-icon { background: linear-gradient(135deg, #2e2860, #252050); }
-
-    body.dark .divider { background: linear-gradient(90deg, #3a3868, #1e3a30); }
-
-    /* ─── Smooth global transition ──────────────────────────────────── */
-    body, .card, .link-btn, .btn-icon, .divider, .feed-panel {
-      transition: background 0.4s ease, background-color 0.4s ease,
-                  color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    /* ─── Toggle Button ─────────────────────────────────────────────── */
-    .theme-toggle {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      z-index: 100;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1px solid var(--glass-border);
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 12px rgba(100, 100, 160, 0.15);
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-      padding: 0;
-    }
-    .theme-toggle:hover {
-      transform: scale(1.12);
-      box-shadow: 0 4px 16px rgba(100, 100, 160, 0.25);
-    }
-    .theme-toggle:active { transform: scale(0.95); }
-
-    .theme-toggle .icon-sun,
-    .theme-toggle .icon-moon { transition: opacity 0.3s ease, transform 0.3s ease; }
-
-    /* Light mode: show sun, hide moon */
-    .theme-toggle .icon-moon { position: absolute; opacity: 0; transform: rotate(30deg) scale(0.7); }
-    .theme-toggle .icon-sun  { opacity: 1; transform: rotate(0deg) scale(1); }
-
-    /* Dark mode: show moon, hide sun */
-    body.dark .theme-toggle .icon-sun  { opacity: 0; transform: rotate(-30deg) scale(0.7); }
-    body.dark .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
-
-    /* ─── Contact Open Button ───────────────────────────────────────── */
-    .contact-open-btn {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 18px;
-      border-radius: var(--btn-radius);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 0.55);
-      color: var(--text-dark);
-      cursor: pointer;
-      width: 100%;
-      text-align: left;
-      font-family: 'Inter', sans-serif;
-      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.22s ease, background 0.22s ease,
-                  border-color 0.4s ease;
-    }
-    .contact-open-btn:hover {
-      transform: translateY(-3px) scale(1.015);
-      box-shadow: 0 10px 28px rgba(140, 120, 200, 0.2);
-      background: rgba(255, 255, 255, 0.8);
-    }
-    .contact-open-btn:active { transform: translateY(0) scale(0.99); }
-    .contact-open-btn .btn-icon { background: linear-gradient(135deg, var(--mint), var(--lavender)); flex-shrink: 0; }
-    .contact-open-btn .btn-label { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
-    .contact-open-btn .btn-sub   { font-size: 0.75rem; font-weight: 400; color: var(--text-light); line-height: 1.3; }
-    .contact-open-btn .btn-arrow {
-      margin-left: auto; flex-shrink: 0;
-      font-size: 0.85rem; color: var(--text-light);
-      transition: transform 0.2s ease, color 0.2s ease;
-    }
-    .contact-open-btn:hover .btn-arrow { transform: translateX(3px); color: var(--text-mid); }
-
-    body.dark .contact-open-btn {
-      background: rgba(40, 36, 65, 0.60);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    body.dark .contact-open-btn:hover {
-      background: rgba(55, 50, 85, 0.80);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-    }
-    body.dark .contact-open-btn .btn-icon { background: linear-gradient(135deg, #1a3d35, #2e2860); }
-
-    /* ─── Contact Modal ─────────────────────────────────────────────── */
-    .contact-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: rgba(80, 60, 120, 0.20);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-    .contact-modal.open { opacity: 1; pointer-events: all; }
-
-    .modal-card {
-      position: relative;
-      width: 100%;
-      max-width: 460px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      box-shadow: 0 16px 60px rgba(80, 60, 140, 0.25);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      padding: 32px 28px 28px;
-      transform: translateY(24px) scale(0.97);
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  background 0.4s ease, border-color 0.4s ease;
-    }
-    .contact-modal.open .modal-card { transform: translateY(0) scale(1); }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    .modal-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-    .modal-close {
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      border: 1px solid var(--glass-border);
-      background: rgba(255, 255, 255, 0.45);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-light);
-      font-size: 1.1rem;
-      line-height: 1;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease;
-    }
-    .modal-close:hover { transform: scale(1.15); background: rgba(255,255,255,0.75); }
-    body.dark .modal-close { background: rgba(40,36,65,0.55); }
-    body.dark .modal-close:hover { background: rgba(55,50,85,0.85); }
-
-    /* ─── LinkedIn Feed ─────────────────────────────────────────────── */
-    .feed-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .feed-header-label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: var(--text-light);
-    }
-
-    .feed-scroll {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-      max-height: 420px;
-      padding-right: 4px;
-    }
-
-    /* Custom scrollbar */
-    .feed-scroll::-webkit-scrollbar { width: 4px; }
-    .feed-scroll::-webkit-scrollbar-track { background: transparent; }
-    .feed-scroll::-webkit-scrollbar-thumb {
-      background: rgba(199, 206, 234, 0.6);
-      border-radius: 4px;
-    }
-    body.dark .feed-scroll::-webkit-scrollbar-thumb {
-      background: rgba(100, 90, 160, 0.4);
-    }
-
-    .post-card {
-      display: block;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid rgba(199, 206, 234, 0.35);
-      background: rgba(255, 255, 255, 0.40);
-      text-decoration: none;
-      color: inherit;
-      transition: transform 0.20s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.20s ease, background 0.20s ease;
-    }
-    .post-card:hover {
-      transform: translateY(-2px) scale(1.010);
-      box-shadow: 0 6px 20px rgba(140, 120, 200, 0.15);
-      background: rgba(255, 255, 255, 0.70);
-    }
-
-    .post-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .post-avatar {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1.5px solid var(--glass-border);
-      flex-shrink: 0;
-    }
-    .post-author  { font-size: 0.78rem; font-weight: 600; color: var(--text-dark); line-height: 1.2; }
-    .post-date    { font-size: 0.70rem; color: var(--text-light); }
-
-    .post-text {
-      font-size: 0.80rem;
-      line-height: 1.55;
-      color: var(--text-mid);
-      margin-bottom: 10px;
-      display: -webkit-box;
-      -webkit-line-clamp: 7;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .post-cta {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: #4a6fa5;
-      letter-spacing: 0.02em;
-    }
-    body.dark .post-cta { color: #8aa4d8; }
-
-    /* Dark mode — feed */
-    body.dark .post-card {
-      background: rgba(30, 26, 55, 0.50);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    body.dark .post-card:hover {
-      background: rgba(45, 40, 75, 0.75);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.30);
-    }
-
-    /* ─── Contact Form ──────────────────────────────────────────────── */
-    .contact-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      text-align: left;
-    }
-
-    .contact-form input,
-    .contact-form textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(180, 160, 220, 0.35);
-      background: rgba(255, 255, 255, 0.45);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      color: var(--text-dark);
-      outline: none;
-      resize: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.4s ease;
-    }
-
-    .contact-form input::placeholder,
-    .contact-form textarea::placeholder { color: var(--text-light); }
-
-    .contact-form input:focus,
-    .contact-form textarea:focus {
-      border-color: rgba(180, 160, 220, 0.75);
-      box-shadow: 0 0 0 3px rgba(199, 206, 234, 0.30);
-      background: rgba(255, 255, 255, 0.70);
-    }
-
-    .contact-form textarea { height: 96px; }
-
-    .btn-submit {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 18px;
-      border-radius: var(--btn-radius);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 0.55);
-      color: var(--text-dark);
-      cursor: pointer;
-      width: 100%;
-      text-align: left;
-      font-family: 'Inter', sans-serif;
-      transition:
-        transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-        box-shadow 0.22s ease,
-        background 0.22s ease;
-    }
-    .btn-submit:hover {
-      transform: translateY(-3px) scale(1.015);
-      box-shadow: 0 10px 28px rgba(140, 120, 200, 0.2);
-      background: rgba(255, 255, 255, 0.8);
-    }
-    .btn-submit:active { transform: translateY(0) scale(0.99); }
-    .btn-submit .btn-icon { background: linear-gradient(135deg, var(--mint), var(--lavender)); }
-    .btn-submit .btn-label { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); }
-    .btn-submit .btn-arrow {
-      margin-left: auto;
-      font-size: 0.85rem;
-      color: var(--text-light);
-      transition: transform 0.2s ease, color 0.2s ease;
-    }
-    .btn-submit:hover .btn-arrow { transform: translateX(3px); color: var(--text-mid); }
-
-    .form-success {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 18px;
-      border-radius: 12px;
-      background: rgba(181, 234, 215, 0.35);
-      border: 1px solid rgba(181, 234, 215, 0.6);
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-mid);
-      animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .form-success.visible { display: flex; }
-
-    /* Dark mode — form */
+    body.dark .hero-name { background: linear-gradient(135deg, #e8e6f4 30%, #a090e0); -webkit-background-clip: text; background-clip: text; }
+    body.dark .role-pill { background:rgba(40,36,65,0.55); border-color:rgba(255,255,255,0.08); }
+    body.dark .role-pill.accent { background:linear-gradient(135deg,rgba(46,53,104,0.6),rgba(26,61,53,0.6)); border-color:rgba(255,255,255,0.12); }
+    body.dark .social-icon { background:rgba(40,36,65,0.55); border-color:rgba(255,255,255,0.08); }
+    body.dark .social-icon:hover { background:rgba(60,54,95,0.80); }
+    body.dark .current-item { border-color:rgba(255,255,255,0.07); }
+    body.dark .current-item:hover { background:rgba(255,255,255,0.05); }
+    body.dark .tag { background:rgba(40,36,65,0.50); border-color:rgba(255,255,255,0.07); }
+    body.dark .tag:hover { background:rgba(60,54,95,0.80); }
+    body.dark .link-btn { background:rgba(35,32,58,0.60); border-color:rgba(255,255,255,0.07); }
+    body.dark .link-btn:hover { background:rgba(50,46,80,0.80); }
+    body.dark .btn-linkedin .btn-icon { background:linear-gradient(135deg,#2e3568,#1e3055); }
+    body.dark .btn-discord  .btn-icon { background:linear-gradient(135deg,#252870,#1e2260); }
+    body.dark .btn-email    .btn-icon { background:linear-gradient(135deg,#4a2e22,#3a2a18); }
+    body.dark .btn-starlabs .btn-icon { background:linear-gradient(135deg,#1a3d35,#152d38); }
+    body.dark .btn-shkolla  .btn-icon { background:linear-gradient(135deg,#3a2e10,#3a2218); }
+    body.dark .btn-booking  .btn-icon { background:linear-gradient(135deg,#2e2860,#252050); }
+    body.dark .post-card { background:rgba(28,25,50,0.55); border-color:rgba(255,255,255,0.07); }
+    body.dark .post-card:hover { background:rgba(42,38,72,0.80); }
+    body.dark .post-cta { color:#9080cc; }
+    body.dark .company-card { }
+    body.dark .company-link { color:#9080cc; }
+    body.dark .company-badge.teal  { background:linear-gradient(135deg,#1a3d35,#152d38); }
+    body.dark .company-badge.amber { background:linear-gradient(135deg,#3a2e10,#3a2218); }
     body.dark .contact-form input,
-    body.dark .contact-form textarea {
-      background: rgba(30, 26, 55, 0.55);
-      border-color: rgba(255, 255, 255, 0.10);
-      color: var(--text-dark);
-    }
+    body.dark .contact-form textarea { background:rgba(28,25,50,0.55); border-color:rgba(255,255,255,0.09); }
     body.dark .contact-form input:focus,
-    body.dark .contact-form textarea:focus {
-      border-color: rgba(160, 144, 224, 0.45);
-      box-shadow: 0 0 0 3px rgba(100, 90, 180, 0.18);
-      background: rgba(40, 35, 70, 0.70);
-    }
-    body.dark .btn-submit {
-      background: rgba(40, 36, 65, 0.60);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    body.dark .btn-submit:hover {
-      background: rgba(55, 50, 85, 0.80);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-    }
-    body.dark .btn-submit .btn-icon { background: linear-gradient(135deg, #1a3d35, #2e2860); }
-    body.dark .form-success {
-      background: rgba(20, 50, 40, 0.45);
-      border-color: rgba(80, 160, 120, 0.30);
+    body.dark .contact-form textarea:focus { border-color:rgba(160,144,224,0.40); box-shadow:0 0 0 3px rgba(100,90,180,0.15); background:rgba(38,34,65,0.75); }
+    body.dark .btn-submit { background:linear-gradient(135deg,rgba(46,53,104,0.65),rgba(26,61,53,0.65)); }
+    body.dark .btn-submit-icon { background:rgba(255,255,255,0.08); }
+    body.dark .form-success { background:rgba(20,50,40,0.45); border-color:rgba(80,160,120,0.30); }
+    body.dark .footer-bar { background:rgba(24,22,42,0.55); border-color:rgba(255,255,255,0.07); }
+    body.dark .section-label::after { background:linear-gradient(90deg,rgba(255,255,255,0.10),transparent); }
+
+    body, .glass, .link-btn, .btn-icon, .tag, .post-card, .social-icon, .stat, .company-card, .role-pill, .footer-bar, .section-label::after {
+      transition: background 0.4s ease, background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
-    /* ─── Mobile ────────────────────────────────────────────────────── */
-    @media (max-width: 720px) {
-      .layout { flex-direction: column; align-items: center; }
-      .card { max-width: 100%; flex-shrink: unset; }
-      .side-panel { width: 100%; max-width: 480px; }
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position:fixed; top:18px; right:18px; z-index:200;
+      width:40px; height:40px; border-radius:50%;
+      border:1px solid var(--glass-border); background:var(--glass-bg);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 2px 14px rgba(100,100,160,0.14);
+      transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.4s, border-color 0.4s;
+      padding:0;
     }
-    @media (max-width: 520px) {
-      .card { padding: 36px 24px 32px; }
-      .name { font-size: 1.7rem; }
+    .theme-toggle:hover { transform:scale(1.12); }
+    .theme-toggle:active { transform:scale(0.94); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { transition:opacity 0.3s ease, transform 0.3s ease; }
+    .theme-toggle .icon-moon { position:absolute; opacity:0; transform:rotate(30deg) scale(0.7); }
+    .theme-toggle .icon-sun  { opacity:1; transform:rotate(0) scale(1); }
+    body.dark .theme-toggle .icon-sun  { opacity:0; transform:rotate(-30deg) scale(0.7); }
+    body.dark .theme-toggle .icon-moon { opacity:1; transform:rotate(0) scale(1); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      body { padding: 32px 12px 48px; }
+      .hero { grid-template-columns: 1fr; text-align: center; padding: 28px 24px 32px; gap: 20px; }
+      .avatar-col { width: 100%; }
+      .social-icons { justify-content: center; }
+      .hero-roles { justify-content: center; }
+      .hero-bio { margin: 0 auto; }
+      .currently-row { grid-template-columns: 1fr; }
+      .current-item { border-right: none; border-bottom: 1px solid rgba(199,206,234,0.35); }
+      .current-item:last-child { border-bottom: none; }
+      .two-col { grid-template-columns: 1fr; }
+      .posts-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .section-card { padding: 24px 20px; }
+      .hero-name { font-size: 2.1rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Dark mode toggle -->
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-    <!-- Sun icon (light mode) -->
-    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-         fill="none" stroke="#b07030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b07030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="4"/>
-      <line x1="12" y1="2"  x2="12" y2="4"/>
-      <line x1="12" y1="20" x2="12" y2="22"/>
-      <line x1="4.22" y1="4.22"  x2="5.64" y2="5.64"/>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="2"  y1="12" x2="4"  y2="12"/>
-      <line x1="20" y1="12" x2="22" y2="12"/>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
     </svg>
-    <!-- Moon icon (dark mode) -->
-    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
-         fill="none" stroke="#a090e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a090e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
     </svg>
   </button>
 
-  <!-- 3D animated background -->
   <canvas id="bg3d" aria-hidden="true"></canvas>
 
-  <!-- Two-column layout -->
-  <div class="layout">
+  <div class="page">
 
-    <!-- Main card -->
-    <main class="card" role="main">
-
-      <!-- Profile photo -->
-      <div class="avatar-wrap">
-        <div class="avatar">
-          <img src="photo.jpg" alt="Jeta Syla"
-               style="width:100%;height:100%;object-fit:cover;" />
+    <!-- ── HERO ── -->
+    <div class="glass hero">
+      <div class="avatar-col">
+        <div class="avatar-ring">
+          <img src="photo.jpg" alt="Jeta Syla" />
         </div>
-      </div>
-
-      <!-- Name -->
-      <h1 class="name">Jeta Syla</h1>
-
-      <!-- Title / roles -->
-      <p class="title">
-        Executive Coordinator<br />
-        <strong>Star Labs</strong> &amp; <strong>Shkolla Digjitale</strong>
-      </p>
-
-      <div class="divider"></div>
-
-      <!-- Link buttons -->
-      <nav class="links" aria-label="Links">
-
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/in/jeta-syla-0a001a288/" target="_blank" rel="noopener noreferrer"
-           class="link-btn btn-linkedin" aria-label="LinkedIn profile">
-          <span class="btn-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#4a6fa5" aria-hidden="true">
+        <div class="social-icons">
+          <!-- LinkedIn -->
+          <a href="https://www.linkedin.com/in/jeta-syla-0a001a288/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#4a6fa5">
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
             </svg>
-          </span>
-          <span class="btn-text">
-            <span class="btn-label">LinkedIn</span>
-            <span class="btn-sub">Connect with me</span>
-          </span>
-          <span class="btn-arrow" aria-hidden="true">→</span>
-        </a>
-
-        <!-- Discord -->
-        <a href="https://discord.com/users/1425171610532319373" target="_blank" rel="noopener noreferrer"
-           class="link-btn btn-discord" aria-label="Message me on Discord">
-          <span class="btn-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#5865F2" aria-hidden="true">
+          </a>
+          <!-- Discord -->
+          <a href="https://discord.com/users/1425171610532319373" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Discord">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#5865F2">
               <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
             </svg>
-          </span>
-          <span class="btn-text">
-            <span class="btn-label">Discord</span>
-            <span class="btn-sub">Message me</span>
-          </span>
-          <span class="btn-arrow" aria-hidden="true">→</span>
-        </a>
-
-        <!-- Email -->
-        <a href="mailto:jeta.syla@starlabspro.com"
-           class="link-btn btn-email" aria-label="Send email">
-          <span class="btn-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b07050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect width="20" height="16" x="2" y="4" rx="2"/>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-            </svg>
-          </span>
-          <span class="btn-text">
-            <span class="btn-label">Email</span>
-            <span class="btn-sub">Get in touch</span>
-          </span>
-          <span class="btn-arrow" aria-hidden="true">→</span>
-        </a>
-
-        <!-- Star Labs LLC -->
-        <a href="https://starlabs.dev/" target="_blank" rel="noopener noreferrer"
-           class="link-btn btn-starlabs" aria-label="Star Labs LLC website">
-          <span class="btn-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3a8a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-          </span>
-          <span class="btn-text">
-            <span class="btn-label">Star Labs LLC</span>
-            <span class="btn-sub">Where I work</span>
-          </span>
-          <span class="btn-arrow" aria-hidden="true">→</span>
-        </a>
-
-        <!-- Shkolla Digjitale -->
-        <a href="https://shkolladigjitale.com/" target="_blank" rel="noopener noreferrer"
-           class="link-btn btn-shkolla" aria-label="Shkolla Digjitale website">
-          <span class="btn-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b06030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-            </svg>
-          </span>
-          <span class="btn-text">
-            <span class="btn-label">Shkolla Digjitale</span>
-            <span class="btn-sub">Digital school initiative</span>
-          </span>
-          <span class="btn-arrow" aria-hidden="true">→</span>
-        </a>
-
-        <!-- Schedule a Meeting -->
-        <a href="https://outlook.office.com/bookwithme/user/61b4422e8e3c46afb1f40e108fea29f1@starlabspro.com/meetingtype/3HPFLt8SYEy0ujfJuLo63Q2?anonymous&ep=owaSlotsTextLink" target="_blank" rel="noopener noreferrer"
-           class="link-btn btn-booking" aria-label="Schedule a meeting">
-          <span class="btn-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6a5acd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
-              <line x1="16" y1="2" x2="16" y2="6"/>
-              <line x1="8" y1="2" x2="8" y2="6"/>
-              <line x1="3" y1="10" x2="21" y2="10"/>
-              <line x1="8" y1="14" x2="8" y2="14"/>
-              <line x1="12" y1="14" x2="12" y2="14"/>
-              <line x1="16" y1="14" x2="16" y2="14"/>
-              <line x1="8" y1="18" x2="8" y2="18"/>
-              <line x1="12" y1="18" x2="12" y2="18"/>
-            </svg>
-          </span>
-          <span class="btn-text">
-            <span class="btn-label">Schedule a Meeting</span>
-            <span class="btn-sub">Book time with me</span>
-          </span>
-          <span class="btn-arrow" aria-hidden="true">→</span>
-        </a>
-
-      </nav>
-
-      <!-- Footer -->
-      <footer class="footer" aria-label="Domain">
-        jetasyla.online
-      </footer>
-
-    </main>
-
-    <!-- Side Panel -->
-    <aside class="side-panel">
-
-      <!-- LinkedIn feed
-           HOW TO UPDATE POSTS: duplicate a .post-card block, update href,
-           post-date, post-text. Send me the LinkedIn URL and I'll do it. -->
-      <div class="feed-panel">
-        <div class="feed-header">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#8888a2" aria-hidden="true">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-          </svg>
-          <span class="feed-header-label">Latest Posts</span>
-        </div>
-
-        <div class="feed-scroll" role="list">
-
-          <!-- POST 1 — March 2026 -->
-          <a href="https://www.linkedin.com/posts/darsej_were-building-a-new-age-ai-rd-team-activity-7437167374589493248-cAjf"
-             target="_blank" rel="noopener noreferrer"
-             class="post-card" role="listitem">
-            <div class="post-meta">
-              <img src="photo.jpg" alt="Jeta Syla" class="post-avatar" />
-              <div>
-                <div class="post-author">Jeta Syla</div>
-                <div class="post-date">March 12, 2026</div>
-              </div>
-            </div>
-            <p class="post-text">
-              We're building a new age AI R&amp;D team at Star Labs — a completely new working approach. Looking for a Project Manager, Mid-Level Developer, DevOps Engineer, and QA Specialist ready to push every limit. Apply at workwith.darsej.com 🚀
-            </p>
-            <span class="post-cta">View on LinkedIn →</span>
           </a>
-
-          <!-- POST 2 — February 2026 -->
-          <a href="https://www.linkedin.com/posts/jeta-syla-0a001a288_ai-digitalschool-shkolladigjitale-activity-7433537591716651008-neiZ"
-             target="_blank" rel="noopener noreferrer"
-             class="post-card" role="listitem">
-            <div class="post-meta">
-              <img src="photo.jpg" alt="Jeta Syla" class="post-avatar" />
-              <div>
-                <div class="post-author">Jeta Syla</div>
-                <div class="post-date">February 28, 2026</div>
-              </div>
-            </div>
-            <p class="post-text">
-              Dikur, mos me dit anglisht ke mbet mrapa. Sot, mos me dit me perdor AI po nenkupton te njejten. Dje sapo perfundum pilotimin e trajnimit "Krijo me AI" — brenda 5 diteve intensive, ata arriten me ndertu platforma dhe produkte qe deri dje jan mendu si te mundshme vetem nese je programer. #AI #ShkollaDigjitale
-            </p>
-            <span class="post-cta">View on LinkedIn →</span>
+          <!-- Email -->
+          <a href="mailto:jeta.syla@starlabspro.com" class="social-icon" aria-label="Email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#b07050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
           </a>
-
+          <!-- Schedule a Meeting -->
+          <a href="https://outlook.office.com/bookwithme/user/61b4422e8e3c46afb1f40e108fea29f1@starlabspro.com/meetingtype/3HPFLt8SYEy0ujfJuLo63Q2?anonymous&ep=owaSlotsTextLink" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Schedule a Meeting">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6a5acd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/>
+            </svg>
+          </a>
         </div>
       </div>
 
-      <!-- Contact button — opens modal -->
-      <button class="contact-open-btn" id="openContact" aria-label="Open contact form">
-        <span class="btn-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-               fill="none" stroke="#3a7a6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-        </span>
-        <span class="btn-text">
-          <span class="btn-label">Send a Message</span>
-          <span class="btn-sub">I'd love to hear from you</span>
-        </span>
-        <span class="btn-arrow" aria-hidden="true">→</span>
-      </button>
-
-    </aside>
-
-  </div><!-- end .layout -->
-
-  <!-- Contact modal -->
-  <div class="contact-modal" id="contactModal" role="dialog" aria-modal="true" aria-label="Contact Jeta Syla">
-    <div class="modal-card">
-      <div class="modal-header">
-        <span class="modal-title">Get in Touch</span>
-        <button class="modal-close" id="closeContact" aria-label="Close">&times;</button>
+      <div class="hero-text">
+        <p class="hero-eyebrow">Executive Coordinator</p>
+        <h1 class="hero-name">Jeta Syla</h1>
+        <div class="hero-roles">
+          <span class="role-pill accent">Star Labs LLC</span>
+          <span class="role-pill accent">Shkolla Digjitale</span>
+          <span class="role-pill">🇽🇰 Kosovo</span>
+        </div>
+        <p class="hero-bio">
+          Driving operations and growth across tech and education in Kosovo.
+          Passionate about AI, digital transformation, and building teams that move fast and think big.
+        </p>
       </div>
-      <form class="contact-form" id="contactForm" novalidate aria-label="Contact form">
-        <input  type="text"  name="name"    placeholder="Your name"    required autocomplete="name" />
-        <input  type="email" name="email"   placeholder="Your email"   required autocomplete="email" />
-        <textarea            name="message" placeholder="Your message" required></textarea>
+    </div>
 
+    <!-- ── CURRENTLY ── -->
+    <div class="glass currently-row" aria-label="Currently">
+      <div class="current-item">
+        <span class="current-icon">🚀</span>
+        <div>
+          <div class="current-title">Building AI Teams</div>
+          <div class="current-sub">Recruiting & scaling R&D at Star Labs</div>
+        </div>
+      </div>
+      <div class="current-item">
+        <span class="current-icon">🎓</span>
+        <div>
+          <div class="current-title">Training Digital Creators</div>
+          <div class="current-sub">AI literacy programs at Shkolla Digjitale</div>
+        </div>
+      </div>
+      <div class="current-item">
+        <span class="current-icon">🇽🇰</span>
+        <div>
+          <div class="current-title">Kosovo's Digital Future</div>
+          <div class="current-sub">Driving tech & education transformation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── COMPANIES ── -->
+    <div class="two-col">
+      <a href="https://starlabs.dev/" target="_blank" rel="noopener noreferrer" class="glass company-card">
+        <div class="company-badge teal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3a8a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="company-name">Star Labs LLC</div>
+        <div class="company-role">Executive Coordinator</div>
+        <p class="company-desc">Building next-generation AI R&D teams and tech products, with a focus on innovation and execution at speed.</p>
+        <span class="company-link">starlabs.dev →</span>
+      </a>
+      <a href="https://shkolladigjitale.com/" target="_blank" rel="noopener noreferrer" class="glass company-card">
+        <div class="company-badge amber">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b06030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="company-name">Shkolla Digjitale</div>
+        <div class="company-role">Executive Coordinator</div>
+        <p class="company-desc">Empowering Albanians to build with AI — intensive training programs that turn non-developers into digital creators.</p>
+        <span class="company-link">shkolladigjitale.com →</span>
+      </a>
+    </div>
+
+    <!-- ── SKILLS ── -->
+    <div class="glass section-card">
+      <p class="section-label">Areas of Focus</p>
+      <div class="tags">
+        <span class="tag">Operations</span>
+        <span class="tag">AI &amp; Machine Learning</span>
+        <span class="tag">EdTech</span>
+        <span class="tag">Leadership</span>
+        <span class="tag">Digital Transformation</span>
+        <span class="tag">Project Management</span>
+      </div>
+    </div>
+
+    <!-- ── POSTS ── -->
+    <div class="glass section-card">
+      <p class="section-label">Latest Posts</p>
+      <div class="posts-grid" role="list">
+
+        <a href="https://www.linkedin.com/posts/darsej_were-building-a-new-age-ai-rd-team-activity-7437167374589493248-cAjf"
+           target="_blank" rel="noopener noreferrer" class="post-card" role="listitem">
+          <div class="post-meta">
+            <img src="photo.jpg" alt="Jeta Syla" class="post-avatar" />
+            <div><div class="post-author">Jeta Syla</div><div class="post-date">March 12, 2026</div></div>
+          </div>
+          <p class="post-text">We're building a new age AI R&amp;D team at Star Labs — a completely new working approach. Looking for a Project Manager, Mid-Level Developer, DevOps Engineer, and QA Specialist ready to push every limit. 🚀</p>
+          <span class="post-cta">View on LinkedIn →</span>
+        </a>
+
+        <a href="https://www.linkedin.com/posts/jeta-syla-0a001a288_ai-digitalschool-shkolladigjitale-activity-7433537591716651008-neiZ"
+           target="_blank" rel="noopener noreferrer" class="post-card" role="listitem">
+          <div class="post-meta">
+            <img src="photo.jpg" alt="Jeta Syla" class="post-avatar" />
+            <div><div class="post-author">Jeta Syla</div><div class="post-date">February 28, 2026</div></div>
+          </div>
+          <p class="post-text">Dikur, mos me dit anglisht ke mbet mrapa. Sot, mos me dit me perdor AI po nenkupton te njejten. Dje sapo perfundum pilotimin e trajnimit "Krijo me AI" — brenda 5 diteve intensive. #AI #ShkollaDigjitale</p>
+          <span class="post-cta">View on LinkedIn →</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- ── CONTACT ── -->
+    <div class="glass section-card">
+      <p class="section-label">Get in Touch</p>
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="form-grid">
+          <input type="text"  name="name"  placeholder="Your name"  required autocomplete="name" />
+          <input type="email" name="email" placeholder="Your email" required autocomplete="email" />
+        </div>
+        <textarea name="message" placeholder="Your message" required></textarea>
         <button type="submit" class="btn-submit">
-          <span class="btn-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                 fill="none" stroke="#3a7a6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="22" y1="2" x2="11" y2="13"/>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          <span class="btn-submit-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3a7a6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
             </svg>
           </span>
-          <span class="btn-label">Send Message</span>
-          <span class="btn-arrow" aria-hidden="true">→</span>
+          <span>Send Message</span>
+          <span class="btn-submit-arrow">→</span>
         </button>
-
         <div class="form-success" id="formSuccess" role="status" aria-live="polite">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           Thanks! I'll get back to you soon.
         </div>
       </form>
     </div>
-  </div>
 
-  <!-- WebGL echo/ripple background shader -->
+    <!-- ── FOOTER ── -->
+    <div class="footer-bar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌸</text></svg>
+      jetasyla.online
+    </div>
+
+  </div><!-- end .page -->
+
+  <!-- WebGL background -->
   <script>
-  (function () {
-    const canvas = document.getElementById('bg3d');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    if (!gl) return;
-
-    /* ── Shaders ──────────────────────────────────────────────────────── */
-    const VS = `
-      attribute vec2 a_pos;
-      void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
-    `;
-
-    const FS = `
+  (function(){
+    const canvas=document.getElementById('bg3d');
+    const gl=canvas.getContext('webgl')||canvas.getContext('experimental-webgl');
+    if(!gl)return;
+    const VS=`attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0.,1.);}`;
+    const FS=`
       precision mediump float;
-      uniform vec2  u_res;
-      uniform float u_time;
-      uniform float u_dark;
-
-      /* 5-stop palette lerp */
-      vec3 lPal(float t) {
-        vec3 c0 = vec3(0.71, 0.92, 0.84);  /* mint     */
-        vec3 c1 = vec3(1.00, 0.85, 0.76);  /* peach    */
-        vec3 c2 = vec3(0.78, 0.81, 0.92);  /* lavender */
-        vec3 c3 = vec3(0.68, 0.90, 0.96);  /* sky      */
-        vec3 c4 = vec3(1.00, 0.98, 0.80);  /* lemon    */
-        float s = t * 4.0;
-        vec3 c = mix(c0, c1, clamp(s,      0.0, 1.0));
-             c = mix(c,  c2, clamp(s-1.0,  0.0, 1.0));
-             c = mix(c,  c3, clamp(s-2.0,  0.0, 1.0));
-             c = mix(c,  c4, clamp(s-3.0,  0.0, 1.0));
-        return c;
+      uniform vec2 u_res;uniform float u_time;uniform float u_dark;
+      vec3 lPal(float t){
+        vec3 c0=vec3(.71,.92,.84),c1=vec3(1.,.85,.76),c2=vec3(.78,.81,.92),c3=vec3(.68,.90,.96),c4=vec3(1.,.98,.80);
+        float s=t*4.;vec3 c=mix(c0,c1,clamp(s,0.,1.));c=mix(c,c2,clamp(s-1.,0.,1.));c=mix(c,c3,clamp(s-2.,0.,1.));c=mix(c,c4,clamp(s-3.,0.,1.));return c;
       }
-
-      vec3 dPal(float t) {
-        vec3 c0 = vec3(0.07, 0.06, 0.24);
-        vec3 c1 = vec3(0.19, 0.06, 0.27);
-        vec3 c2 = vec3(0.05, 0.09, 0.22);
-        vec3 c3 = vec3(0.08, 0.14, 0.30);
-        vec3 c4 = vec3(0.16, 0.08, 0.34);
-        float s = t * 4.0;
-        vec3 c = mix(c0, c1, clamp(s,      0.0, 1.0));
-             c = mix(c,  c2, clamp(s-1.0,  0.0, 1.0));
-             c = mix(c,  c3, clamp(s-2.0,  0.0, 1.0));
-             c = mix(c,  c4, clamp(s-3.0,  0.0, 1.0));
-        return c;
+      vec3 dPal(float t){
+        vec3 c0=vec3(.07,.06,.24),c1=vec3(.19,.06,.27),c2=vec3(.05,.09,.22),c3=vec3(.08,.14,.30),c4=vec3(.16,.08,.34);
+        float s=t*4.;vec3 c=mix(c0,c1,clamp(s,0.,1.));c=mix(c,c2,clamp(s-1.,0.,1.));c=mix(c,c3,clamp(s-2.,0.,1.));c=mix(c,c4,clamp(s-3.,0.,1.));return c;
       }
-
-      void main() {
-        vec2 uv  = gl_FragCoord.xy / u_res;
-        float asp = u_res.x / u_res.y;
-        float t   = u_time * 0.42;
-
-        /* 5 slowly drifting echo sources */
-        vec2 s0 = vec2(0.5 + 0.36*sin(t*0.31),      0.5 + 0.27*cos(t*0.37));
-        vec2 s1 = vec2(0.5 + 0.31*cos(t*0.27+1.00), 0.5 + 0.33*sin(t*0.41+0.50));
-        vec2 s2 = vec2(0.5 + 0.24*sin(t*0.43+2.00), 0.5 + 0.21*cos(t*0.33+1.20));
-        vec2 s3 = vec2(0.5 + 0.39*cos(t*0.22+3.00), 0.5 + 0.29*sin(t*0.29+2.10));
-        vec2 s4 = vec2(0.5 + 0.19*sin(t*0.54+0.70), 0.5 + 0.36*cos(t*0.46+3.00));
-
-        /* Aspect-corrected distances */
-        vec2 a = vec2(asp, 1.0);
-        float d0 = length((uv - s0) * a);
-        float d1 = length((uv - s1) * a);
-        float d2 = length((uv - s2) * a);
-        float d3 = length((uv - s3) * a);
-        float d4 = length((uv - s4) * a);
-
-        /* Concentric echo rings from each source */
-        float spd = 2.2;
-        float w0 = sin(d0 * 16.0 - t * spd)        * 0.5 + 0.5;
-        float w1 = sin(d1 * 20.0 - t * spd * 1.10) * 0.5 + 0.5;
-        float w2 = sin(d2 * 24.0 - t * spd * 0.88) * 0.5 + 0.5;
-        float w3 = sin(d3 * 18.0 - t * spd * 1.22) * 0.5 + 0.5;
-        float w4 = sin(d4 * 22.0 - t * spd * 0.78) * 0.5 + 0.5;
-
-        /* Weight by inverse distance so nearest source dominates */
-        float g  = 2.2;
-        float i0 = 1.0 / (1.0 + d0 * g);
-        float i1 = 1.0 / (1.0 + d1 * g);
-        float i2 = 1.0 / (1.0 + d2 * g);
-        float i3 = 1.0 / (1.0 + d3 * g);
-        float i4 = 1.0 / (1.0 + d4 * g);
-        float tot = i0 + i1 + i2 + i3 + i4;
-
-        float field = (w0*i0 + w1*i1 + w2*i2 + w3*i3 + w4*i4) / tot;
-        field = smoothstep(0.05, 0.95, field);
-
-        /* Cross-source interference for richer pattern */
-        float xwave = sin((d0 + d3) * 11.0 - t * 1.1) * 0.5 + 0.5;
-        field = mix(field, xwave, 0.18);
-
-        vec3 col = mix(lPal(field), dPal(field), u_dark);
-        gl_FragColor = vec4(col, 1.0);
-      }
-    `;
-
-    /* ── Compile & link ───────────────────────────────────────────────── */
-    function mkShader(type, src) {
-      const sh = gl.createShader(type);
-      gl.shaderSource(sh, src);
-      gl.compileShader(sh);
-      return sh;
-    }
-    const prog = gl.createProgram();
-    gl.attachShader(prog, mkShader(gl.VERTEX_SHADER,   VS));
-    gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, FS));
-    gl.linkProgram(prog);
-    gl.useProgram(prog);
-
-    /* Full-screen triangle strip */
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-    const aPos = gl.getAttribLocation(prog, 'a_pos');
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-    const uRes  = gl.getUniformLocation(prog, 'u_res');
-    const uTime = gl.getUniformLocation(prog, 'u_time');
-    const uDark = gl.getUniformLocation(prog, 'u_dark');
-
-    function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(uRes, canvas.width, canvas.height);
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    /* Smooth dark transition */
-    let darkVal = 0.0;
-    let darkTgt = 0.0;
-    window.__bg3dSetDark = function (dark) { darkTgt = dark ? 1.0 : 0.0; };
-
-    const t0 = performance.now();
-    (function frame() {
-      requestAnimationFrame(frame);
-      darkVal += (darkTgt - darkVal) * 0.055;
-      gl.uniform1f(uTime, (performance.now() - t0) / 1000.0);
-      gl.uniform1f(uDark, darkVal);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    })();
+      void main(){
+        vec2 uv=gl_FragCoord.xy/u_res;float asp=u_res.x/u_res.y;float t=u_time*.42;
+        vec2 s0=vec2(.5+.36*sin(t*.31),.5+.27*cos(t*.37));
+        vec2 s1=vec2(.5+.31*cos(t*.27+1.),.5+.33*sin(t*.41+.5));
+        vec2 s2=vec2(.5+.24*sin(t*.43+2.),.5+.21*cos(t*.33+1.2));
+        vec2 s3=vec2(.5+.39*cos(t*.22+3.),.5+.29*sin(t*.29+2.1));
+        vec2 s4=vec2(.5+.19*sin(t*.54+.7),.5+.36*cos(t*.46+3.));
+        vec2 a=vec2(asp,1.);
+        float d0=length((uv-s0)*a),d1=length((uv-s1)*a),d2=length((uv-s2)*a),d3=length((uv-s3)*a),d4=length((uv-s4)*a);
+        float spd=2.2;
+        float w0=sin(d0*16.-t*spd)*.5+.5,w1=sin(d1*20.-t*spd*1.1)*.5+.5,w2=sin(d2*24.-t*spd*.88)*.5+.5;
+        float w3=sin(d3*18.-t*spd*1.22)*.5+.5,w4=sin(d4*22.-t*spd*.78)*.5+.5;
+        float g=2.2,i0=1./(1.+d0*g),i1=1./(1.+d1*g),i2=1./(1.+d2*g),i3=1./(1.+d3*g),i4=1./(1.+d4*g);
+        float tot=i0+i1+i2+i3+i4;
+        float field=smoothstep(.05,.95,(w0*i0+w1*i1+w2*i2+w3*i3+w4*i4)/tot);
+        field=mix(field,sin((d0+d3)*11.-t*1.1)*.5+.5,.18);
+        gl_FragColor=vec4(mix(lPal(field),dPal(field),u_dark),1.);
+      }`;
+    function mkS(t,s){const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;}
+    const p=gl.createProgram();
+    gl.attachShader(p,mkS(gl.VERTEX_SHADER,VS));gl.attachShader(p,mkS(gl.FRAGMENT_SHADER,FS));
+    gl.linkProgram(p);gl.useProgram(p);
+    gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+    const aPos=gl.getAttribLocation(p,'a_pos');
+    gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);
+    const uR=gl.getUniformLocation(p,'u_res'),uT=gl.getUniformLocation(p,'u_time'),uD=gl.getUniformLocation(p,'u_dark');
+    function resize(){canvas.width=innerWidth;canvas.height=innerHeight;gl.viewport(0,0,canvas.width,canvas.height);gl.uniform2f(uR,canvas.width,canvas.height);}
+    resize();window.addEventListener('resize',resize);
+    let dv=0,dt=0;window.__bg3dSetDark=d=>{dt=d?1:0;};
+    const t0=performance.now();
+    (function frame(){requestAnimationFrame(frame);dv+=(dt-dv)*.055;gl.uniform1f(uT,(performance.now()-t0)/1e3);gl.uniform1f(uD,dv);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);})();
   })();
   </script>
 
   <script>
-    (function () {
-      const toggle = document.getElementById('themeToggle');
-      const body   = document.body;
+  (function(){
+    // Theme
+    const toggle=document.getElementById('themeToggle'),body=document.body;
+    function getPref(){const s=localStorage.getItem('theme');return s||( matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');}
+    function applyTheme(m){body.classList.toggle('dark',m==='dark');toggle.setAttribute('aria-label',m==='dark'?'Switch to light mode':'Switch to dark mode');if(window.__bg3dSetDark)window.__bg3dSetDark(m==='dark');}
+    applyTheme(getPref());
+    toggle.addEventListener('click',()=>{const n=body.classList.contains('dark')?'light':'dark';localStorage.setItem('theme',n);applyTheme(n);});
 
-      // Determine initial mode: localStorage → system preference → light
-      function getPreferred() {
-        const saved = localStorage.getItem('theme');
-        if (saved) return saved;
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
-
-      function applyTheme(mode) {
-        if (mode === 'dark') {
-          body.classList.add('dark');
-        } else {
-          body.classList.remove('dark');
-        }
-        toggle.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-        if (window.__bg3dSetDark) window.__bg3dSetDark(mode === 'dark');
-      }
-
-      // Apply on load (before paint to avoid flash)
-      applyTheme(getPreferred());
-
-      toggle.addEventListener('click', function () {
-        const isDark = body.classList.contains('dark');
-        const next   = isDark ? 'light' : 'dark';
-        localStorage.setItem('theme', next);
-        applyTheme(next);
-      });
-
-      // ── Modal ──────────────────────────────────────────────────────
-      const openBtn  = document.getElementById('openContact');
-      const closeBtn = document.getElementById('closeContact');
-      const modal    = document.getElementById('contactModal');
-
-      openBtn.addEventListener('click', function () { modal.classList.add('open'); });
-      closeBtn.addEventListener('click', function () { modal.classList.remove('open'); });
-      modal.addEventListener('click', function (e) {
-        if (e.target === modal) modal.classList.remove('open');
-      });
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') modal.classList.remove('open');
-      });
-
-      // ── Contact form ───────────────────────────────────────────────
-      const form    = document.getElementById('contactForm');
-      const success = document.getElementById('formSuccess');
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        success.classList.remove('visible');
-
-        // Basic validation — all fields required
-        const fields = form.querySelectorAll('input, textarea');
-        let valid = true;
-        fields.forEach(function (f) { if (!f.value.trim()) valid = false; });
-        if (!valid) return;
-
-        // Collect form data
-        const data = {
-          name:    form.querySelector('input[name="name"]').value.trim(),
-          email:   form.querySelector('input[name="email"]').value.trim(),
-          message: form.querySelector('textarea[name="message"]').value.trim(),
-        };
-
-        // Send to n8n webhook → Resend → jeta.syla@starlabspro.com
-        fetch('https://n8n.jetasyla.online/webhook/contact-jetasyla', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-        .then(function (r) { return r.ok ? r : Promise.reject(r); })
-        .then(function () {
-          form.reset();
-          success.classList.add('visible');
-        })
-        .catch(function () {
-          success.textContent = 'Something went wrong — please email me directly.';
-          success.classList.add('visible');
-        });
-      });
-    })();
+    // Contact form
+    const form=document.getElementById('contactForm'),success=document.getElementById('formSuccess');
+    form.addEventListener('submit',function(e){
+      e.preventDefault();success.classList.remove('visible');
+      const fields=form.querySelectorAll('input,textarea');
+      let ok=true;fields.forEach(f=>{if(!f.value.trim())ok=false;});
+      if(!ok)return;
+      const data={name:form.querySelector('[name=name]').value.trim(),email:form.querySelector('[name=email]').value.trim(),message:form.querySelector('[name=message]').value.trim()};
+      fetch('https://n8n.jetasyla.online/webhook/contact-jetasyla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+      .then(r=>r.ok?r:Promise.reject())
+      .then(()=>{form.reset();success.classList.add('visible');})
+      .catch(()=>{success.textContent='Something went wrong — please email me directly.';success.classList.add('visible');});
+    });
+  })();
   </script>
+
 </body>
 </html>
