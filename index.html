@@ -297,6 +297,84 @@
     .link-btn:nth-child(4) { animation-delay: 1.00s; }
     .link-btn:nth-child(5) { animation-delay: 1.15s; }
 
+    /* ─── Dark Mode Variables ───────────────────────────────────────── */
+    body.dark {
+      --glass-bg:    rgba(30, 28, 48, 0.65);
+      --glass-border:rgba(255, 255, 255, 0.10);
+      --shadow:      0 8px 40px rgba(0, 0, 0, 0.45);
+      --text-dark:   #e8e6f4;
+      --text-mid:    #a8a4c8;
+      --text-light:  #6a6690;
+      background-color: #13111f;
+    }
+
+    body.dark .blob-1 { background: radial-gradient(circle, #2a2060, #1a1540); opacity: 0.8; }
+    body.dark .blob-2 { background: radial-gradient(circle, #1e1535, #2a1a45); opacity: 0.8; }
+    body.dark .blob-3 { background: radial-gradient(circle, #0f1a30, #1a2040); opacity: 0.8; }
+    body.dark .blob-4 { background: radial-gradient(circle, #251535, #1a1030); opacity: 0.8; }
+
+    body.dark .link-btn {
+      background: rgba(40, 36, 65, 0.60);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    body.dark .link-btn:hover {
+      background: rgba(55, 50, 85, 0.80);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    body.dark .btn-linkedin .btn-icon { background: linear-gradient(135deg, #2e3568, #1e3055); }
+    body.dark .btn-email    .btn-icon { background: linear-gradient(135deg, #4a2e22, #3a2a18); }
+    body.dark .btn-starlabs .btn-icon { background: linear-gradient(135deg, #1a3d35, #152d38); }
+    body.dark .btn-shkolla  .btn-icon { background: linear-gradient(135deg, #3a2e10, #3a2218); }
+    body.dark .btn-booking  .btn-icon { background: linear-gradient(135deg, #2e2860, #252050); }
+
+    body.dark .divider { background: linear-gradient(90deg, #3a3868, #1e3a30); }
+
+    /* ─── Smooth global transition ──────────────────────────────────── */
+    body, .card, .link-btn, .btn-icon, .blob, .divider {
+      transition: background 0.4s ease, background-color 0.4s ease,
+                  color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* ─── Toggle Button ─────────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 100;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(100, 100, 160, 0.15);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+      padding: 0;
+    }
+    .theme-toggle:hover {
+      transform: scale(1.12);
+      box-shadow: 0 4px 16px rgba(100, 100, 160, 0.25);
+    }
+    .theme-toggle:active { transform: scale(0.95); }
+
+    .theme-toggle .icon-sun,
+    .theme-toggle .icon-moon { transition: opacity 0.3s ease, transform 0.3s ease; }
+
+    /* Light mode: show sun, hide moon */
+    .theme-toggle .icon-moon { position: absolute; opacity: 0; transform: rotate(30deg) scale(0.7); }
+    .theme-toggle .icon-sun  { opacity: 1; transform: rotate(0deg) scale(1); }
+
+    /* Dark mode: show moon, hide sun */
+    body.dark .theme-toggle .icon-sun  { opacity: 0; transform: rotate(-30deg) scale(0.7); }
+    body.dark .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+
     /* ─── Mobile ────────────────────────────────────────────────────── */
     @media (max-width: 520px) {
       .card { padding: 36px 24px 32px; }
@@ -305,6 +383,28 @@
   </style>
 </head>
 <body>
+
+  <!-- Dark mode toggle -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+    <!-- Sun icon (light mode) -->
+    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+         fill="none" stroke="#b07030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"/>
+      <line x1="12" y1="2"  x2="12" y2="4"/>
+      <line x1="12" y1="20" x2="12" y2="22"/>
+      <line x1="4.22" y1="4.22"  x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="2"  y1="12" x2="4"  y2="12"/>
+      <line x1="20" y1="12" x2="22" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    <!-- Moon icon (dark mode) -->
+    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+         fill="none" stroke="#a090e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
 
   <!-- Pastel blob background -->
   <div class="bg" aria-hidden="true">
@@ -451,5 +551,37 @@
 
   </main>
 
+  <script>
+    (function () {
+      const toggle = document.getElementById('themeToggle');
+      const body   = document.body;
+
+      // Determine initial mode: localStorage → system preference → light
+      function getPreferred() {
+        const saved = localStorage.getItem('theme');
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function applyTheme(mode) {
+        if (mode === 'dark') {
+          body.classList.add('dark');
+        } else {
+          body.classList.remove('dark');
+        }
+        toggle.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+
+      // Apply on load (before paint to avoid flash)
+      applyTheme(getPreferred());
+
+      toggle.addEventListener('click', function () {
+        const isDark = body.classList.contains('dark');
+        const next   = isDark ? 'light' : 'dark';
+        localStorage.setItem('theme', next);
+        applyTheme(next);
+      });
+    })();
+  </script>
 </body>
 </html>
